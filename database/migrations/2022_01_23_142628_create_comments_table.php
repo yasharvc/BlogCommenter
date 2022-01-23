@@ -17,8 +17,8 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->string('username');
             $table->string('comment');
-            $table->string('path_to_parent');
-            $table->timestamp('parent_create_at');
+            $table->string('path_to_parent')->nullable()->default('');
+            $table->timestamp('parent_create_at')->nullable()->default(null);
             $table->timestamps();
         });
     }

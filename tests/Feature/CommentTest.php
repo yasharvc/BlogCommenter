@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Support\Facades\DB;
 
 class CommentTests extends TestCase
 {
@@ -27,5 +28,15 @@ class CommentTests extends TestCase
             'code'=>400,
             'message'=>"Parent"
         ]);
+    }
+    public function test_comment_add_should_Root_Comment()
+    {
+        $response = $this->post('/api/comment/add',[
+            "username"=>"ABC",
+            "comment"=>"Test"
+        ]);
+
+        $cnt = DB::table('comments')->get()->count();
+        $this->assertTrue(1 == $cnt);
     }
 }
