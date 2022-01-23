@@ -23,11 +23,60 @@
     </div>
     <section>
       <h1>Comments:</h1>
+      <div class="form-row">
+        <div class="col-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Username..."
+            v-model="username"
+          />
+        </div>
+        <div class="col-9">
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Comment..."
+              aria-label="Comment..."
+              aria-describedby="basic-addon2"
+              v-model="comment"
+            />
+            <div class="input-group-append">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                :disabled="!isValid"
+                @click="addComment"
+              >
+                Add Comment
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
 </template>
 <script>
 export default {
-    
-}
+  data() {
+    return {
+      username: "Yashar",
+      comment: "This is test",
+    };
+  },
+  computed: {
+    isValid() {
+      return this.username.length > 0 && this.comment.length > 0;
+    },
+  },
+  methods: {
+    addComment() {
+        if(this.isValid()){
+            alert("ok");
+        }
+    },
+  },
+};
 </script>
