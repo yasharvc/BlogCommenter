@@ -1,8 +1,8 @@
-import cmp from './components/ExampleComponent.vue';
+import Post from './components/Post.vue';
 
 export const routes = [{
         name: 'home',
         path: '/',
-        component: cmp
+        component: Post
     }
 ];
