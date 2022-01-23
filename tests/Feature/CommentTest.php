@@ -57,4 +57,15 @@ class CommentTests extends TestCase
         $this->assertTrue(2 == $cnt);
         DB::table('comments')->where('path_to_parent','LIKE',$firstComment->id.',%');
     }
+    public function test_comments_get_should_return_inserted_comment(){
+        $this->post('/api/comment/add',[
+            "username"=>"ABC",
+            "comment"=>"Test"
+        ]);
+
+        $response = $this->get('/api/comments');
+
+        $response->assertStatus(200);
+        $this->assertTrue($response["total"] == 1);
+    }
 }

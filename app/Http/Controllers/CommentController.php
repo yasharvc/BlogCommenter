@@ -9,7 +9,10 @@ Use \Carbon\Carbon;
 class CommentController extends Controller
 {
     public function index(){
-
+        return Comment::
+            orderBy("parent_create_at",'desc')->
+            orderBy("path_to_parent")
+            ->paginate(10);
     }
 
     public function addComment(){
