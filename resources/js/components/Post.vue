@@ -46,10 +46,10 @@
               <button
                 class="btn btn-outline-secondary"
                 type="button"
-                :disabled="!isValid"
+                :disabled="!isValid || inProgress"
                 @click="addComment"
               >
-                Add Comment
+                Add Comment<i v-if="inProgress" class="fa fa-spin fa-spinner"></i>
               </button>
             </div>
           </div>
@@ -64,6 +64,7 @@ export default {
     return {
       username: "Yashar",
       comment: "This is test",
+      inProgress: false,
     };
   },
   computed: {
@@ -73,9 +74,21 @@ export default {
   },
   methods: {
     addComment() {
-        if(this.isValid()){
-            alert("ok");
-        }
+      this.inProgress = true;
+      if (this.isValid) {
+        axios
+          .post("/api/comment/add", {
+            username: this.username,
+            comment: this.comment,
+          })
+          .then((res) => {
+            if (res.data.error == false) {
+              this.inProgress = false;
+              this.comment = "";
+              this.username = "";
+            }
+          });
+      }
     },
   },
 };

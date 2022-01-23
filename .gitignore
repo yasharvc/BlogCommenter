@@ -14,3 +14,4 @@ yarn-error.log
 /.idea
 /.vscode
 .bash
+public/js/app.js
