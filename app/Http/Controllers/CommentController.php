@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     public function index(){
-        
+
+    }
+
+    public function addComment(){
+
     }
 }
