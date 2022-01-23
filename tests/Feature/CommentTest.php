@@ -29,7 +29,7 @@ class CommentTests extends TestCase
             'message'=>"Parent"
         ]);
     }
-    public function test_comment_add_should_Root_Comment()
+    public function test_comment_add_should_add_Root_Comment()
     {
         $response = $this->post('/api/comment/add',[
             "username"=>"ABC",
@@ -38,5 +38,23 @@ class CommentTests extends TestCase
 
         $cnt = DB::table('comments')->get()->count();
         $this->assertTrue(1 == $cnt);
+    }
+    public function test_comment_add_should_add_Reply_Comment()
+    {
+        $this->post('/api/comment/add',[
+            "username"=>"ABC",
+            "comment"=>"Test"
+        ]);
+
+        $firstComment = DB::table('comments')->first();
+
+        $response = $this->post('/api/comment/add',[
+            "username"=>"ABC",
+            "comment"=>"Test",
+            "parentId"=> strval($firstComment->id)
+        ]);
+        $cnt = DB::table('comments')->get()->count();
+        $this->assertTrue(2 == $cnt);
+        DB::table('comments')->where('path_to_parent','LIKE',$firstComment->id.',%');
     }
 }
