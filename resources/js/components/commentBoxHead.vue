@@ -3,10 +3,7 @@
     <h6 class="comment-name">{{ node.username }}</h6>
     <span>{{ node.created_at | formatDate }}</span>
     <i class="fa fa-reply" @click="show" v-if="spacing < 2"></i>
-    <b-modal 
-    :id="dialogId2" 
-    title="Comment Detail"
-    @ok="save($event)">
+    <b-modal :id="dialogId2" title="Comment Detail" @ok="save($event)">
       <b-card bg-variant="light">
         <b-form-group
           label-cols-lg="0"
@@ -30,9 +27,8 @@
           >
             <b-form-input v-model="comment"></b-form-input>
           </b-form-group>
-          <span v-if="isValid"
-            >{{ username }} says '{{ comment }}'</span>
-        <span v-else class="text-danger">Comment is incomplete!</span>
+          <span v-if="isValid">{{ username }} says '{{ comment }}'</span>
+          <span v-else class="text-danger">Comment is incomplete!</span>
         </b-form-group>
       </b-card>
     </b-modal>
@@ -45,29 +41,41 @@ export default {
     dialogId2() {
       return "_" + this.dialogId;
     },
-    isValid(){
-        return this.username.length > 0 && this.comment.length > 0;
-    }
+    isValid() {
+      return this.username.length > 0 && this.comment.length > 0;
+    },
   },
   methods: {
     show() {
       this.$bvModal.show(this.dialogId2);
     },
-    save(bvModalEvt){
-        bvModalEvt.preventDefault()
-        if(!(this.username.length > 0 && this.comment.length > 0))
-            alert('Data not valid');
-        else
-            this.$nextTick(() => {
-                this.$bvModal.hide(this.dialogId2);
-                 axios
-                .post("/api/comment/add", {
-                    username: this.username,
-                    comment: this.comment,
-                    parentId: this.dialogId
-                })
+    save(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      if (!(this.username.length > 0 && this.comment.length > 0))
+        alert("Data not valid");
+      else
+        this.$nextTick(() => {
+          this.$bvModal.hide(this.dialogId2);
+          axios
+            .post("/api/comment/add", {
+              username: this.username,
+              comment: this.comment,
+              parentId: this.dialogId,
             })
-    }
+            .then((resp) => {
+              if (resp.data.error == false) {
+                resp.data.comment.children = [];
+                this.username = "";
+                this.comment = "";
+                this.$emit("newReplyAdded", this.dialogId, resp.data.comment);
+              }
+            });
+        });
+    },
+    newReplyAdded(id, comment) {
+      if (!comment.children) comment.children = [];
+      this.$emit("newReplyAdded", id, comment);
+    },
   },
   data() {
     return {

@@ -7,7 +7,12 @@
           <div class="comment-avatar"><img :src="usernameAvatar" alt="" /></div>
           <!-- Contenedor del Comentario -->
           <div class="comment-box">
-            <comment-head :dialogId="node.id" :node="node" :spacing="spacing"/>
+            <comment-head
+              :dialogId="node.id"
+              :node="node"
+              :spacing="spacing"
+              @newReplyAdded="newReplyAdded"
+            />
             <div class="comment-content">
               {{ node.comment }}
             </div>
@@ -19,6 +24,7 @@
             :key="child.id"
             :node="child"
             :spacing="spacing + 1"
+            @newReplyAdded="newReplyAdded"
           />
         </div>
       </li>
@@ -26,7 +32,7 @@
   </div>
 </template>
 <script>
-import commentHead from './commentBoxHead.vue';
+import commentHead from "./commentBoxHead.vue";
 export default {
   name: "comment",
   components: {
@@ -67,6 +73,9 @@ export default {
   methods: {
     toggleChildren() {
       this.showChildren = !this.showChildren;
+    },
+    newReplyAdded(id, comment) {
+      this.$emit("newReplyAdded", id, comment);
     },
   },
 };
@@ -278,7 +287,6 @@ body {
 .reply-list-2 .comment-box {
   width: 610px;
 }
-
 
 .comment-box .comment-name {
   color: #283035;

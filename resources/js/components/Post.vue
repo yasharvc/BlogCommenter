@@ -58,7 +58,12 @@
           </div>
         </div>
       </div>
-      <comment v-for="node in loadedComments" :key="node.id" :node="node" />
+      <comment
+        v-for="node in loadedComments"
+        :key="node.id"
+        :node="node"
+        @newReplyAdded="newReplyAdded"
+      />
       <div class="container my-3 bg-light">
         <div class="col-md-12 text-center">
           <button @click="nextPage" class="btn btn-secondary">
@@ -113,7 +118,6 @@ export default {
           url = "/api/comments?page=" + this.current_page;
         }
         axios.get(url).then((resp) => {
-          console.warn(resp.data.data);
           this.concatComments(resp.data.data);
         });
       } else {
@@ -141,14 +145,15 @@ export default {
       var arr = path.split(",").slice(0, -1);
       var res = null;
       arr.forEach((id) => {
-        if (res == null) res = this.loadedComments.find((o) => o.id == parseInt(id));
+        if (res == null)
+          res = this.loadedComments.find((o) => o.id == parseInt(id));
         else res = res.children.find((o) => o.id == parseInt(id));
       });
       return res;
     },
     addComment() {
       this.inProgress = true;
-      if (this.isValid()) {
+      if (this.isValid) {
         axios
           .post("/api/comment/add", {
             username: this.username,
@@ -164,6 +169,14 @@ export default {
               this.username = "";
             }
           });
+      }
+    },
+    newReplyAdded(id, comment) {
+      var parent = this.getParent(comment.path_to_parent);
+      if(parent.children.length == 0){
+        parent.children.push(comment);
+      }else{
+        parent.children.unshift(comment);
       }
     },
   },
