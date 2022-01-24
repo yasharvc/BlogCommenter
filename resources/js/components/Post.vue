@@ -66,7 +66,6 @@
           </button>
         </div>
       </div>
-      {{ loadedComments }}
     </section>
   </div>
 </template>
@@ -78,8 +77,8 @@ export default {
   },
   data() {
     return {
-      username: "Yashar",
-      comment: "This is test",
+      username: "",
+      comment: "",
       loadedComments: [],
       inProgress: false,
       pagination: {
@@ -128,6 +127,9 @@ export default {
       comments.forEach((e) => {
         //If comment is a reply then path_to_parent has at least one comma(,)
         if (e.path_to_parent.indexOf(",") > -1) {
+          e.children = [];
+          var parent = this.getParent(e.path_to_parent);
+          parent.children.push(e);
         } else {
           e.children = [];
           this.loadedComments.push(e);
@@ -135,18 +137,18 @@ export default {
       });
       //return res;
     },
-    getParent(all, input, path) {
+    getParent(path) {
       var arr = path.split(",").slice(0, -1);
       var res = null;
       arr.forEach((id) => {
-        if (res == null) res = all.find((o) => o.id == parseInt(id));
+        if (res == null) res = this.loadedComments.find((o) => o.id == parseInt(id));
         else res = res.children.find((o) => o.id == parseInt(id));
       });
       return res;
     },
     addComment() {
       this.inProgress = true;
-      if (this.isValid) {
+      if (this.isValid()) {
         axios
           .post("/api/comment/add", {
             username: this.username,
@@ -154,7 +156,7 @@ export default {
           })
           .then((res) => {
             if (res.data.error == false) {
-              this.loadedComments=[];
+              this.loadedComments = [];
               this.resetPaging();
               this.nextPage();
               this.inProgress = false;

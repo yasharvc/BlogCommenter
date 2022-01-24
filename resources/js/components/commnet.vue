@@ -7,7 +7,7 @@
           <div class="comment-avatar"><img :src="usernameAvatar" alt="" /></div>
           <!-- Contenedor del Comentario -->
           <div class="comment-box">
-            <comment-head :dialogId="node.comment" :node="node" :spacing="spacing"/>
+            <comment-head :dialogId="node.id" :node="node" :spacing="spacing"/>
             <div class="comment-content">
               {{ node.comment }}
             </div>

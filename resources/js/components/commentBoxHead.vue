@@ -6,7 +6,7 @@
     <b-modal 
     :id="dialogId2" 
     title="Comment Detail"
-    @ok="save">
+    @ok="save($event)">
       <b-card bg-variant="light">
         <b-form-group
           label-cols-lg="0"
@@ -53,13 +53,19 @@ export default {
     show() {
       this.$bvModal.show(this.dialogId2);
     },
-    save(){
+    save(bvModalEvt){
         bvModalEvt.preventDefault()
-        if(!this.isValid())
-            alert('not valid');
+        if(!(this.username.length > 0 && this.comment.length > 0))
+            alert('Data not valid');
         else
             this.$nextTick(() => {
                 this.$bvModal.hide(this.dialogId2);
+                 axios
+                .post("/api/comment/add", {
+                    username: this.username,
+                    comment: this.comment,
+                    parentId: this.dialogId
+                })
             })
     }
   },
