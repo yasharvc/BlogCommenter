@@ -12,7 +12,7 @@ class CommentController extends Controller
         return Comment::
             orderBy("parent_create_at",'desc')->
             orderBy("path_to_parent")
-            ->paginate(10);
+            ->paginate(2);
     }
 
     public function addComment(){

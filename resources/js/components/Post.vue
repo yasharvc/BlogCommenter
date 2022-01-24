@@ -118,6 +118,10 @@ export default {
           url = "/api/comments?page=" + this.current_page;
         }
         axios.get(url).then((resp) => {
+          this.pagination.current_page = resp.data.current_page;
+          this.pagination.per_page = resp.data.per_page;
+          this.pagination.last_page = resp.data.last_page;
+          this.pagination.next_page_url = resp.data.next_page_url;
           this.concatComments(resp.data.data);
         });
       } else {
@@ -173,9 +177,9 @@ export default {
     },
     newReplyAdded(id, comment) {
       var parent = this.getParent(comment.path_to_parent);
-      if(parent.children.length == 0){
+      if (parent.children.length == 0) {
         parent.children.push(comment);
-      }else{
+      } else {
         parent.children.unshift(comment);
       }
     },
