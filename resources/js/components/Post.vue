@@ -58,7 +58,11 @@
           </div>
         </div>
       </div>
-      <button @click="nextPage">Load comments</button>
+      <div class="container my-3 bg-light">
+        <div class="col-md-12 text-center">
+          <button @click="nextPage" class="btn btn-secondary">Load <span v-if="pagination.current_page > 0">more</span> comments</button>
+        </div>
+      </div>
       {{ loadedComments }}
     </section>
   </div>
@@ -79,7 +83,9 @@ export default {
       },
     };
   },
-  mounted() {},
+  mounted() {
+    this.nextPage();
+  },
   computed: {
     isValid() {
       return this.username.length > 0 && this.comment.length > 0;
@@ -108,8 +114,7 @@ export default {
     makeTree(comments) {
       comments.forEach((e) => {
         //If comment is a reply then path_to_parent has at least one comma(,)
-        if (e.path_to_parent.indexOf(',') > -1) {
-          
+        if (e.path_to_parent.indexOf(",") > -1) {
         } else {
           e.children = [];
           this.loadedComments.push(e);
