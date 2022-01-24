@@ -58,9 +58,12 @@
           </div>
         </div>
       </div>
+      <comment v-for="node in loadedComments" :key="node.id" :node="node" />
       <div class="container my-3 bg-light">
         <div class="col-md-12 text-center">
-          <button @click="nextPage" class="btn btn-secondary">Load <span v-if="pagination.current_page > 0">more</span> comments</button>
+          <button @click="nextPage" class="btn btn-secondary">
+            Load <span v-if="pagination.current_page > 0">more</span> comments
+          </button>
         </div>
       </div>
       {{ loadedComments }}
@@ -68,7 +71,11 @@
   </div>
 </template>
 <script>
+import comment from "./commnet.vue";
 export default {
+  components: {
+    comment,
+  },
   data() {
     return {
       username: "Yashar",
@@ -92,6 +99,12 @@ export default {
     },
   },
   methods: {
+    resetPaging() {
+      this.pagination.current_page = 0;
+      this.pagination.per_page = 10;
+      this.pagination.last_page = 1;
+      this.pagination.next_page_url = null;
+    },
     nextPage() {
       if (this.pagination.current_page < this.pagination.last_page) {
         this.pagination.current_page++;
@@ -141,6 +154,9 @@ export default {
           })
           .then((res) => {
             if (res.data.error == false) {
+              this.loadedComments=[];
+              this.resetPaging();
+              this.nextPage();
               this.inProgress = false;
               this.comment = "";
               this.username = "";
