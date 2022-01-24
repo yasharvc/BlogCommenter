@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     usernameAvatar() {
-      return "https://ui-avatars.com/api/?name=" + this.node.username;
+      return "https://i.pravatar.cc/150?u=" + this.node.username;
     },
     intentclass() {
       if (this.spacing == 0) return "comments-list";
