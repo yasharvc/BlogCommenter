@@ -12,7 +12,7 @@ class CommentController extends Controller
         return Comment::
             orderBy("parent_create_at",'desc')->
             orderBy("path_to_parent")
-            ->paginate(2);
+            ->paginate(5);
     }
 
     public function addComment(){
@@ -33,7 +33,6 @@ class CommentController extends Controller
                 ];
             }
             //Find grandparent for setting parent_create_at property
-            print(explode(",",$parent->path_to_parent)[0]);
             $grandParent = Comment::find(explode(",",$parent->path_to_parent)[0]);
             $record = new Comment;
             $record->username = $username;
